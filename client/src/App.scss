@@ -1,0 +1,695 @@
+/* 
+=====================// INDEX //=====================
+       _____ _   _ _____  ________   __
+     |_   _| \ | |  __ \|  ____\ \ / /
+      | | |  \| | |  | | |__   \ V / 
+     | | | . ` | |  | |  __|   > <  
+   _| |_| |\  | |__| | |____ / . \ 
+ |_____|_| \_|_____/|______/_/ \_\
+
+=====================// INDEX //=====================
+
+1. General
+2. Regions
+3. Map
+4. Reports
+5. Tables
+6. Forms
+*/
+
+/*
+=====================// GENERAL //=====================
+        _____ ______ _   _ ______ _____            _      
+     / ____|  ____|  \ | |  ____|  __ \     /\   | |     
+    | |  __| |__  |  \| | |__  | |__) |   /  \  | |     
+   | | |_ |  __| | . ` |  __| |  _  /   / /\ \ | |     
+  | |__| | |____| |\  | |____| | \ \  / ____ \| |____ 
+  \_____|______|_| \_|______|_|  \_\/_/    \_\______|
+
+=====================// GENERAL //=====================
+*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'BC Sans', 'Noto Sans', Arial, 'sans serif';
+}
+  
+.home, .reports, .regions, .adf-redirect-header, .water-officers, .add-new-file, .archive, .support {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    padding-top: 140px;
+}
+.adf-redirect {
+    display: flex;
+    height: 20vh;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    padding-top: 20px;
+}
+.print-button {
+    background-color: #003366;
+    color: #f1f1f1;
+    padding: 10px;
+    border: 1px solid #38598a;
+    border-radius: 4px;
+    text-align: center;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+/*
+=====================// REGIONS //=====================
+       _____  ______ _____ _____ ____  _   _  _____ 
+     |  __ \|  ____/ ____|_   _/ __ \| \ | |/ ____|
+    | |__) | |__ | |  __  | || |  | |  \| | (___  
+   |  _  /|  __|| | |_ | | || |  | | . ` |\___ \ 
+  | | \ \| |___| |__| |_| || |__| | |\  |____) |
+ |_|  \_\______\_____|_____\____/|_| \_|_____/ 
+
+=====================// REGIONS //=====================
+*/
+.region-container {
+    display: flex;
+    height: 90vh;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+/*
+=====================// MAP//=====================
+      __  __          _____  
+     |  \/  |   /\   |  __ \ 
+    | \  / |  /  \  | |__) |
+   | |\/| | / /\ \ |  ___/ 
+  | |  | |/ ____ \| |     
+ |_|  |_/_/    \_\_|     
+
+=====================// MAP //=====================
+*/
+.bcmap-container {
+    height: 80vh;
+    //border: 3px solid red;
+    display: flex;
+    margin: 20vh 0vh 2vh 0vh;
+    justify-content: center;
+    align-items: center;
+}
+  
+.svg-map {
+    //border: 1px solid red;
+    height: 100%;
+    max-height: 100%;
+    width: auto;
+}
+.region-svg-outer-group {
+    display: flex;
+} 
+.region-svg:hover {
+    fill: #003366;
+}
+.region-label {
+    float: left;
+    font-size: 1.2rem;
+    z-index: 1;
+}
+.region-mobile-list {
+    display: flex;
+    justify-content: center;
+    a {
+        text-decoration: none;
+    }
+}
+.mobile-list {
+    /*
+        position, top, left hides the list without
+        using display: none; for accessibility
+    */
+    position: absolute;
+	top: -9999px;
+	left: -9999px;
+    width: 80%;
+    height: 100%;
+    font-size: 2rem;
+    color: #f1f1f1;
+    text-align: center;
+    line-height: normal;
+    list-style: none;
+    
+    li {
+        background-color: #5475a7;
+        border: 1px solid #f1f1f1;
+        border-radius: 10px;
+        margin: 20px 0px;
+        padding: 10px;
+    }
+    a {
+        color: #f1f1f1;
+    }
+    a:hover, li:hover, a:focus, li:focus {
+        // hover and focus for desktop and mobile
+        background-color:#003366;
+        color: #ffffff;
+    }
+}
+/* responsive to display list not map on mobile */
+@media screen and (max-width: 768px) {
+    .mobile-list {
+        /*
+            reveal the regional list and hide the map
+        */
+        display: block;
+        position: relative;
+        top: 150px;
+        left: 0;
+    }
+    .bcmap-container {
+        // hide the map and its container completely
+        display: none;
+    }
+}
+/*
+=====================// REPORTS //=====================
+      _____  ______ _____   ____  _____ _______ _____ 
+     |  __ \|  ____|  __ \ / __ \|  __ \__   __/ ____|
+    | |__) | |__  | |__) | |  | | |__) | | | | (___  
+   |  _  /|  __| |  ___/| |  | |  _  /  | |  \___ \ 
+  | | \ \| |____| |    | |__| | | \ \  | |  ____) |
+ |_|  \_\______|_|     \____/|_|  \_\ |_| |_____/ 
+
+=====================// REPORTS //=====================
+*/
+.report-header {
+    margin: 100px 20px 0px 20px;
+}
+.reports-container {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    margin:20px auto;
+    width: 100%;
+    border: 3px solid green;
+    padding: 10px;
+}
+#area-chart,
+#line-chart,
+#bar-chart,
+#doughnut-chart,
+#stacked,
+#pie-chart{
+  min-height: 450px;
+}
+/*
+=====================// TABLES //=====================
+       _______       ____  _      ______  _____ 
+     |__   __|/\   |  _ \| |    |  ____|/ ____|
+       | |  /  \  | |_) | |    | |__  | (___  
+      | | / /\ \ |  _ <| |    |  __|  \___ \ 
+     | |/ ____ \| |_) | |____| |____ ____) |
+    |_/_/    \_\____/|______|______|_____/ 
+
+=====================// TABLES //=====================
+*/
+.table-nb {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.thead-row-nb {
+    white-space: nowrap;
+}
+.table-archive {
+    margin: 110px 0px 10px 0px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+.archive-btns {
+    margin-left: 10px;
+}
+tr:hover{
+    background-color: cornflowerblue !important;
+}
+#tracker-table table { 
+    width: 100%; 
+    border-collapse: collapse;
+    font-family: 'BC Sans', 'Noto Sans', Arial, 'sans serif'; 
+    position: relative;
+  }
+  /* Zebra striping */
+  #tracker-table tr:nth-of-type(odd) { 
+    background: #eee;
+  }
+  #tracker-table th { 
+    background: #333; 
+    color: white; 
+    font-weight: bold; 
+    //position: sticky;
+    //top: 85px;
+  }
+  #tracker-table td, #tracker-table th { 
+    padding: 6px 4px; 
+    border: 1px solid #003366; 
+    text-align: left; 
+  } 
+  #tracker-table td {
+    cursor: pointer;
+  }
+  /*
+  Make the columns with names as wide as longest name for easier
+  viewing.
+  */
+  #tracker-table td:nth-of-type(7), 
+  #tracker-table td:nth-of-type(8), 
+  #tracker-table td:nth-of-type(9),
+  #tracker-table td:nth-of-type(10) {
+      white-space: nowrap;
+  }
+  /* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+@media only screen and (max-width: 760px),
+(min-device-width: 360px) and (max-device-width: 1024px)  {
+    .table-responsive {
+        min-width: 360px;
+        margin-left: -10px;
+        font-size: 0.8rem;
+    }
+    .table-archive {
+        display: block;
+        margin: 90px 0px 45px 0px;
+        text-align: center;
+    }
+    .archive-btns {
+        margin: auto 10px;
+    }
+
+/* Force table to not be like tables anymore */
+    #tracker-table table, 
+    #tracker-table thead, 
+    #tracker-table tbody, 
+    #tracker-table th, 
+    #tracker-table td, 
+    #tracker-table tr { 
+        display: block;
+	}
+	
+/* Hide table headers (but not display: none;, for accessibility) */
+    #tracker-table thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	#tracker-table tr {
+        padding: 2px;
+        margin-top: 8px;
+        line-height: 30px;
+        border: 1px solid #ccc; 
+    }
+	
+	#tracker-table td { 
+        /* Behave  like a "row" */
+        margin: 6px;
+		border: none;
+		border-bottom: 1px solid rgb(90, 34, 34); 
+		position: relative;
+        padding-left: 50%; 
+        text-align: left;
+    }
+    
+    #tracker-table td:empty {
+        /* 
+            This fixes issues with td:nth-of-type():before {content: "Header";}
+            near overlap on td below.
+        */
+        display: none;
+    }
+	#tracker-table td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+        white-space: nowrap;
+    }
+    #tracker-table td:nth-of-type(7), 
+    #tracker-table td:nth-of-type(8), 
+    #tracker-table td:nth-of-type(9) {
+        white-space: pre-wrap;
+    }
+	
+	/*
+	Label the data
+	*/
+	#tracker-table td:nth-of-type(1) { display: none; } //FCBC RECEIVED DATE
+	#tracker-table td:nth-of-type(2):before { content: "DAYS OLD"; }
+	#tracker-table td:nth-of-type(3) { display: none; } //vFCBC
+	#tracker-table td:nth-of-type(4) { display: none; } //AGENCY AUTH
+	#tracker-table td:nth-of-type(5):before { content: "APPLICANT NAME"; }
+	#tracker-table td:nth-of-type(6):before { content: "SOURCE NAME"; }
+	#tracker-table td:nth-of-type(7):before { content: "AUTHORIZATION TYPE"; }
+	#tracker-table td:nth-of-type(8):before { content: "PURPOSE"; }
+	#tracker-table td:nth-of-type(9):before { content: "REVIEW STAGE"; }
+	#tracker-table td:nth-of-type(10):before { content: "WATER OFFICER"; }
+	#tracker-table td:nth-of-type(11):before { content: "PARKED"; }
+	#tracker-table td:nth-of-type(12) { display: none; }
+	#tracker-table td:nth-of-type(13) { display: none; }
+	#tracker-table td:nth-of-type(14) { display: none; }
+	#tracker-table td:nth-of-type(15) { display: none; }
+	#tracker-table td:nth-of-type(16) { display: none; }
+	#tracker-table td:nth-of-type(17) { display: none; }
+	#tracker-table td:nth-of-type(18) { display: none; }
+	#tracker-table td:nth-of-type(19) { display: none; }
+	#tracker-table td:nth-of-type(20) { display: none; }
+	#tracker-table td:nth-of-type(21) { display: none; }
+	#tracker-table td:nth-of-type(22) { display: none; }
+	#tracker-table td:nth-of-type(23) { display: none; }
+	#tracker-table td:nth-of-type(24) { display: none; }
+
+}
+
+/*
+=====================// PAGINATION //=====================
+       _______       ____  _      ______  _____ 
+     |__   __|/\   |  _ \| |    |  ____|/ ____|
+       | |  /  \  | |_) | |    | |__  | (___  
+      | | / /\ \ |  _ <| |    |  __|  \___ \ 
+     | |/ ____ \| |_) | |____| |____ ____) |
+    |_/_/    \_\____/|______|______|_____/ 
+
+=====================// PAGINATION //=====================
+*/
+
+.buttons {
+    border: 0;
+    border-radius: 0.25rem;
+    background: rgb(51, 51, 51);
+    color: white;
+    font-size: 1rem;
+    height: 40px;
+    line-height: 1.4;
+    white-space: nowrap;
+    text-decoration: none;
+    padding: 0.5rem 0.5rem;
+    margin: 0.5rem;
+    cursor: pointer;
+}
+#prev-next {
+    width: 100px;
+} 
+
+.page-button-container {
+    display: flex;
+    justify-content: center;
+
+    select {
+        margin-top: 10px;
+    }
+}
+.search-bar-nb {
+    width: 50%;
+    margin: auto;
+}
+.has-search .form-control {
+    padding-left: 3rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: rgb(51, 51, 51);
+}
+
+/*
+=====================// FORMS //=====================
+       ______ ____  _____  __  __  _____ 
+     |  ____/ __ \|  __ \|  \/  |/ ____|
+    | |__ | |  | | |__) | \  / | (___  
+   |  __|| |  | |  _  /| |\/| |\___ \ 
+  | |   | |__| | | \ \| |  | |____) |
+ |_|    \____/|_|  \_\_|  |_|_____/ 
+
+=====================// FORMS //=====================
+*/
+/* setup the responsive grid-view with 12 columns */
+.nbcol-1 {
+    width: 8.33%;
+}
+.nbcol-2 {
+    width: 16.66%;
+}
+.nbcol-3 {
+    width: 25%;
+}
+.nbcol-4 {
+    width: 33.33%;
+}
+.nbcol-5 {
+    width: 41.66%;
+}
+.nbcol-6 {
+    width: 50%;
+}
+.nbcol-7 {
+    width: 58.33%;
+}
+.nbcol-8 {
+    width: 66.66%;
+}
+.nbcol-9 {
+    width: 75%;
+}
+.nbcol-10 {
+    width: 83.33%;
+}
+.nbcol-11 {
+    width: 91.66%;
+}
+.nbcol-12 {
+    width: 100%;
+}
+[class*="nbcol-"] {
+    float: left;
+    padding: 15px;
+    border: 1px solid #f2f2f2;
+}
+.row-nb {
+    h4 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+.row-nb::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.form-container {
+    margin: 90px 20px 0px 20px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 12px;
+}
+.form-title-headers {
+    border-top: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.total-time {
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    padding: 6px;
+    background-color: #fff;
+}
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+label {
+    padding: 1px 0;
+    display: inline-block;
+}
+.date-btn {
+    margin-top: 10px;
+    margin-left: 30px;
+    width: 80%;
+}
+.form-group.required .control-label:after { 
+    content:" *";
+    color:red;
+ }
+.form-footer {
+    height: 100px;
+}
+#start-date {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    line-height: 2.4rem;
+    background-color: #ccc;
+    padding-left: 10px;
+}
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    [class*="nbcol-"] {
+      width: 100%;
+    }
+    .form-group {
+        width: 100%;
+    }
+}
+/*
+=====================// SWITCHES //=====================
+
+     _______          _______ _______ _____ _    _ ______  _____ 
+   / ____\ \        / /_   _|__   __/ ____| |  | |  ____|/ ____|
+  | (___  \ \  /\  / /  | |    | | | |    | |__| | |__  | (___  
+  \___ \  \ \/  \/ /   | |    | | | |    |  __  |  __|  \___ \ 
+  ____) | \  /\  /   _| |_   | | | |____| |  | | |____ ____) |
+ |_____/  \/  \/   |_____|  |_|  \_____|_|  |_|______|_____/ 
+                                                               
+=====================// SWITCHES //=====================
+*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 34px;
+    margin-left: 12px;
+  }
+  
+  .switch input { 
+    display: none;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(55px);
+    -ms-transform: translateX(55px);
+    transform: translateX(55px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+  /* ON/OFF text */
+  .on {
+      display: none;
+  }
+    .on {
+      color: #f1f1f1;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 5%;
+      font-size: 12px;
+  }
+    .off {
+      color: #333;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 55%;
+      font-size: 12px;
+  }
+  input:checked + .slider .on {
+      display: block;
+  }
+  input:checked + .slider .off {
+      display: none;
+  }
+  .col-form-label {
+      margin: auto;
+      text-align: center;
+  }
+  #parkedDates {
+      display: none;
+  }
+
+/*
+=====================// DROPDOWNS //=====================
+
+      _____  _____   ____  _____  _____   ______          ___   _  _____ 
+     |  __ \|  __ \ / __ \|  __ \|  __ \ / __ \ \        / / \ | |/ ____|
+    | |  | | |__) | |  | | |__) | |  | | |  | \ \  /\  / /|  \| | (___  
+   | |  | |  _  /| |  | |  ___/| |  | | |  | |\ \/  \/ / | . ` |\___ \ 
+  | |__| | | \ \| |__| | |    | |__| | |__| | \  /\  /  | |\  |____) |
+ |_____/|_|  \_\\____/|_|    |_____/ \____/   \/  \/   |_| \_|_____/                                                                                                                                      
+
+=====================// DROPDOWNS //=====================
+*/
+@mixin styling() {
+    background-color: white;
+    border-color: #ccc;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+}
+.dynamic-dropdown {
+    width: 100%;
+    padding: 24px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    resize: vertical;
+}
