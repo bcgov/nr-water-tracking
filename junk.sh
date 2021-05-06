@@ -1,0 +1,1 @@
+export PATH=$PWD/client/node_modules/.bin:$PWD/server/node_modules/.bin:$PWD/node_modules/.bin:$PATH

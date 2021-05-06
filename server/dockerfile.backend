@@ -1,0 +1,10 @@
+# stage 1: use npm to install dependencies into node_modules 
+#          directory
+FROM node:alpine3.12 AS BUILD_IMAGE
+WORKDIR /backend
+ADD ./db /backend/db/
+ADD ./package.json /backend/
+ADD ./server.js /backend/
+RUN npm install
+
+# COPY ["package.json", "package-lock.json", "./"]
