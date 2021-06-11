@@ -12,6 +12,53 @@ postgis help:
 https://www.postgresql.org/docs/9.2/app-psql.html
 
 
+## specific to watertrack
+
+Modified the SQL_Watertrack.txt significantly to get it to work, in an automated way
+Still needs work... constraints should be moved to bottom of script
+Testing should have taken place to verify that the sql file worked for creating the 
+necessary objects
+
+To create the objects run the table twice.
+
+## Setting up testing on local
+
+### Build the client
+
+```
+cd client
+docker build -t water-client .
+```
+
+### Build the Server
+
+```
+cd server
+docker build -t water-server .
+```
+
+### Build / create objects in db.
+
+
+
+### start the containers
+```
+PORT=3000
+
+PGHOST=localhost
+PGUSER=databaseuser
+PGPASSWORD=databasepass
+PGDATABASE=databasename
+PGPORT=5432
+
+docker run --publish 5432:5432 postgres
+docker run --publish 3000:3000 water-server
+docker run --publish 8888:8888 water-client
+```
+
+
+
+
 # Todo:
 * ~~Create chart with database in it~~
 * ~~Create database service~~
