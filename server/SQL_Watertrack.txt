@@ -1,0 +1,503 @@
+-- ===================================================================================
+-- Table: public.watertrack
+-- DROP TABLE public.watertrack;
+-- ===================================================================================
+CREATE TABLE public.watertrack
+(
+    wt_id bigint NOT NULL DEFAULT nextval("watertrack_wt_id_seq"::regclass),
+    vfcbc character varying(20) COLLATE pg_catalog."default",
+    file_number character varying(20) COLLATE pg_catalog."default",
+    agency_authorization boolean NOT NULL,
+    applicant_name character varying(255) COLLATE pg_catalog."default",
+    source_name character varying(255) COLLATE pg_catalog."default",
+    authorization_type character varying(255) COLLATE pg_catalog."default",
+    purpose character varying(255) COLLATE pg_catalog."default",
+    review_stage character varying(255) COLLATE pg_catalog."default",
+    parked boolean DEFAULT false,
+    comment_section text COLLATE pg_catalog."default",
+    water_officer_id bigint,
+    region_id bigint,
+    archive boolean NOT NULL DEFAULT false,
+    CONSTRAINT watertrack_pkey PRIMARY KEY (wt_id),
+    CONSTRAINT watertrack_region_id_fkey FOREIGN KEY (region_id)
+        REFERENCES public.region (region_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT watertrack_water_officer_id_fkey FOREIGN KEY (water_officer_id)
+        REFERENCES public.water_officer (water_officer_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.watertrack
+    OWNER to "masterBlaster";
+
+-- Trigger: wt_id_rsd_update
+
+-- DROP TRIGGER wt_id_rsd_update ON public.watertrack;
+
+CREATE TRIGGER wt_id_rsd_update
+    AFTER INSERT
+    ON public.watertrack
+    FOR EACH ROW
+    EXECUTE PROCEDURE public.wt_id_insert_rsd();
+-- ===================================================================================
+-- Table: public.review_stage_dates
+-- DROP TABLE public.review_stage_dates;
+-- ===================================================================================
+CREATE TABLE review_stage_dates
+(
+    watertrack_id BIGSERIAL PRIMARY KEY,
+    on_hold_total integer,
+    application_wsd_start date,
+    application_wsd_end date,
+    application_wsd_total integer,
+    date_parked_start date,
+    date_parked_end date,
+    date_parked_total integer,
+    fn_consult_start date,
+    fn_consult_end date,
+    fn_consult_total integer,
+    fcbc_wit_start date,
+    fcbc_wit_end date,
+    fcbc_wit_total integer,
+    preliminary_start date,
+    preliminary_end date,
+    preliminary_total integer,
+    tech_assessment_start date,
+    tech_assessment_end date,
+    tech_assessment_total integer,
+    legal_review_start date,
+    legal_review_end date,
+    legal_review_total integer,
+    sdm_start date,
+    sdm_end date,
+    sdm_total integer,
+    distribute_complete_start date,
+    distribute_complete_end date,
+    distribute_complete_total integer,
+    fcbc_rec_date_start date,
+    fcbc_completed_end date,
+    fcbc_total integer,
+    days_old integer,
+    CONSTRAINT review_stage_dates_watertrack_id_key UNIQUE (watertrack_id),
+    CONSTRAINT chk_date_parked CHECK (date_parked_start <= COALESCE(date_parked_end, CURRENT_DATE) AND date_parked_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_fn_dates CHECK (fn_consult_start <= COALESCE(fn_consult_end, CURRENT_DATE) AND fn_consult_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_fcbc_wit_dates CHECK (fcbc_wit_start <= COALESCE(fcbc_wit_end, CURRENT_DATE) AND fcbc_wit_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_preliminary_dates CHECK (preliminary_start <= COALESCE(preliminary_end, CURRENT_DATE) AND preliminary_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_tech_assessment_dates CHECK (tech_assessment_start <= COALESCE(tech_assessment_end, CURRENT_DATE) AND tech_assessment_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_legal_review_dates CHECK (legal_review_start <= COALESCE(legal_review_end, CURRENT_DATE) AND legal_review_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_sdm_dates CHECK (sdm_start <= COALESCE(sdm_end, CURRENT_DATE) AND sdm_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_distribute_dates CHECK (distribute_complete_start <= COALESCE(distribute_complete_end, CURRENT_DATE) AND distribute_complete_end <= CURRENT_DATE) NOT VALID,
+    CONSTRAINT chk_fcbc_sdm_dates CHECK (fcbc_rec_date_start <= COALESCE(sdm_end, CURRENT_DATE)) NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.review_stage_dates
+    OWNER to "masterBlaster";
+
+COMMENT ON CONSTRAINT chk_tech_assessment_dates ON public.review_stage_dates
+    IS 'tech assessment dates are not correct.';
+COMMENT ON CONSTRAINT chk_legal_review_dates ON public.review_stage_dates
+    IS 'legal review dates are not correct. ';
+COMMENT ON CONSTRAINT chk_sdm_dates ON public.review_stage_dates
+    IS 'decision made dates are not correct.';
+COMMENT ON CONSTRAINT chk_distribute_dates ON public.review_stage_dates
+    IS 'distribute and complete dates are not correct.';
+COMMENT ON CONSTRAINT chk_fcbc_sdm_dates ON public.review_stage_dates
+    IS 'The fcbc recieved date or sdm dates are not correct.';
+--===================================================================================
+-- Table: public.water_officer
+-- DROP TABLE public.water_officer;
+--===================================================================================
+CREATE TABLE public.water_officer
+(
+    water_officer_id bigint NOT NULL DEFAULT nextval('water_officer_water_officer_id_seq'::regclass),
+    first_name character varying(100) COLLATE pg_catalog."default",
+    last_name character varying(100) COLLATE pg_catalog."default",
+    email character varying(255) COLLATE pg_catalog."default",
+    phone_number character varying(20) COLLATE pg_catalog."default",
+    region_id bigint NOT NULL DEFAULT nextval('water_officer_region_id_seq'::regclass),
+    CONSTRAINT water_officer_pkey PRIMARY KEY (water_officer_id),
+    CONSTRAINT water_officer_region_id_fkey FOREIGN KEY (region_id)
+        REFERENCES public.region (region_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.water_officer
+    OWNER to "masterBlaster";
+--===================================================================================
+-- Table: public.region
+-- DROP TABLE public.region;
+--===================================================================================
+CREATE TABLE public.region
+(
+    region_id bigint NOT NULL DEFAULT nextval('region_region_id_seq'::regclass),
+    region character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT region_pkey PRIMARY KEY (region_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.region
+    OWNER to "masterBlaster";
+--===================================================================================
+-- Constraint: vfcbc_unique
+-- ALTER TABLE public.review_stage_dates DROP CONSTRAINT vfcbc_unique;
+--===================================================================================
+ALTER TABLE public.review_stage_dates
+    ADD CONSTRAINT vfcbc_unique UNIQUE (vfcbc)
+    INCLUDE (wt_id, vfcbc);
+
+COMMENT ON CONSTRAINT vfcbc_unique ON public.review_stage_dates
+    IS 'This ensures that there is a one to one relationship to the watertrack table.';
+
+--===================================================================================
+--This is the trigger function.
+--===================================================================================
+CREATE TRIGGER wt_id_rsd_update
+    AFTER INSERT
+    ON public.watertrack
+    FOR EACH ROW
+    EXECUTE PROCEDURE public.wt_id_insert_rsd();
+
+
+CREATE OR REPLACE FUNCTION wt_id_insert_rsd()
+  RETURNS TRIGGER 
+  LANGUAGE PLPGSQL
+  AS
+$$
+BEGIN
+	INSERT INTO review_stage_dates(wt_id, vfcbc)
+	VALUES (NEW.wt_id, NEW.vfcbc);
+
+	RETURN NEW;
+END;
+$$
+--===================================================================================
+--This is the trigger.
+--===================================================================================
+SELECT 
+    ROUND(AVG(application_wsd_total)::numeric,0) AS wsd,
+    ROUND(AVG(date_parked_total)::numeric,0) AS parked,
+    ROUND(AVG(fn_consult_total)::numeric,0) AS fn,
+    ROUND(AVG(fcbc_wit_total)::numeric,0) AS wit_total,
+    ROUND(AVG(preliminary_total)::numeric,0) AS prelim,
+    ROUND(AVG(tech_assessment_total)::numeric,0) AS tech,
+    ROUND(AVG(legal_review_total)::numeric,0) AS legal,
+    ROUND(AVG(sdm_total)::numeric,0) AS sdm,
+    ROUND(AVG(distribute_complete_total)::numeric,0) AS dist,
+    ROUND(AVG(fcbc_total)::numeric,0) AS fcbc,
+    ROUND(AVG(days_old)::numeric,0) AS days_num
+FROM
+    review_stage_dates
+INNER JOIN
+    watertrack ON review_stage_dates.wt_id=watertrack.wt_id
+WHERE 
+    watertrack.region_id=$1 AND watertrack.archive=$2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--  try {
+--         const results = await db.query(
+--             `INSERT INTO watertrack 
+--                 (vfcbc,
+--                     file_number,
+--                     agency_authorization,
+--                     applicant_name,
+--                     source_name,
+--                     authorization_type,
+--                     purpose,
+--                     review_stage,
+--                     parked,
+--                     comment_section,
+--                     water_officer_id,
+--                     region_id) 
+--             VALUES 
+--                 ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10, $11, $12);`,
+--                 [
+--                     req.body.vfcbc,                         //1
+--                     req.body.file_number,                   //2
+--                     req.body.agency_authorization,          //3
+--                     req.body.applicant_name,                //4
+--                     req.body.source_name,                   //5 
+--                     req.body.authorization_type,            //6
+--                     req.body.purpose,                       //7 
+--                     req.body.review_stage,                  //8
+--                     req.body.parked,                        //9
+--                     req.body.comment_section,               //10
+--                     req.body.water_officer_id,              //11
+--                     regionID,                               //12
+--                 ]
+--             );
+--         try {
+--             const datesTable = await db.query(
+--                 `INSERT INTO review_stage_dates
+--                 (application_wsd_start,
+--                     application_wsd_end,
+--                     date_parked_start,
+--                     date_parked_end,
+--                     fn_consult_start,
+--                     fn_consult_end,
+--                     fcbc_wit_start,
+--                     fcbc_wit_end,
+--                     preliminary_start,
+--                     preliminary_end,
+--                     tech_assessment_start,
+--                     tech_assessment_end,
+--                     legal_review_start,
+--                     legal_review_end,
+--                     sdm_start,
+--                     sdm_end,
+--                     distribute_complete_start,
+--                     distribute_complete_end,
+--                     fcbc_rec_date_start,
+--                     fcbc_completed_end,
+--                     on_hold_total)
+--                 VALUES
+--                     ($31, $13, $14, $15, $16, $17,$18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29,
+--                     $30, $31, $32);`,
+--                     [
+--                         req.body.application_wsd_start,         //13
+--                         req.body.application_wsd_end,           //14
+--                         req.body.date_parked_start,             //15
+--                         req.body.date_parked_end,               //16
+--                         req.body.fn_consult_start,              //17
+--                         req.body.fn_consult_end,                //18
+--                         req.body.fcbc_wit_start,                //19
+--                         req.body.fcbc_wit_end,                  //20
+--                         req.body.preliminary_start,             //21
+--                         req.body.preliminary_end,               //22
+--                         req.body.tech_assessment_start,         //23
+--                         req.body.tech_assessment_end,           //24
+--                         req.body.legal_review_start,            //25
+--                         req.body.legal_review_end,              //26
+--                         req.body.sdm_start,                     //27
+--                         req.body.sdm_end,                       //28
+--                         req.body.distribute_complete_start,     //29
+--                         req.body.distribute_complete_end,       //30
+--                         req.body.fcbc_rec_date_start,           //31
+--                         req.body.fcbc_completed_end,            //32
+--                         req.body.on_hold_total                  //33
+--                     ]
+--             );
+--         } catch (err) {
+--             console.error(err.message)
+--         }
+--         res.status(201).json({
+--             status: 'Success!',
+--             data: {
+--                 watertrack: results.rows[0],
+--             },
+--         });
+--     } catch (err) {
+--         console.error(err.message);
+--     };
+-- });
+
+
+--===========================================================================================================
+--This is the review stage dates table.
+--===========================================================================================================
+-- Table: public.review_stage_dates
+
+-- DROP TABLE public.review_stage_dates;
+
+CREATE TABLE public.review_stage_dates
+(
+    watertrack_id bigint NOT NULL DEFAULT nextval('review_stage_dates_watertrack_id_seq'::regclass),
+    on_hold_total integer,
+    application_wsd_start date,
+    application_wsd_end date,
+    application_wsd_total integer,
+    date_parked_start date,
+    date_parked_end date,
+    date_parked_total integer,
+    fn_consult_start date,
+    fn_consult_end date,
+    fn_consult_total integer,
+    fcbc_wit_start date,
+    fcbc_wit_end date,
+    fcbc_wit_total integer,
+    preliminary_start date,
+    preliminary_end date,
+    preliminary_total integer,
+    tech_assessment_start date,
+    tech_assessment_end date,
+    tech_assessment_total integer,
+    legal_review_start date,
+    legal_review_end date,
+    legal_review_total integer,
+    sdm_start date,
+    sdm_end date,
+    sdm_total integer,
+    distribute_complete_start date,
+    distribute_complete_end date,
+    distribute_complete_total integer,
+    fcbc_rec_date_start date,
+    fcbc_completed_end date,
+    fcbc_total integer,
+    days_old integer,
+    wt_id bigint NOT NULL,
+    CONSTRAINT review_stage_dates_pkey1 PRIMARY KEY (watertrack_id),
+    CONSTRAINT fk_wt_id FOREIGN KEY (wt_id)
+        REFERENCES public.watertrack (wt_id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT chk_date_parked CHECK (date_parked_start <= COALESCE(date_parked_end, CURRENT_DATE) AND date_parked_end <= CURRENT_DATE),
+    CONSTRAINT chk_fn_dates CHECK (fn_consult_start <= COALESCE(fn_consult_end, CURRENT_DATE) AND fn_consult_end <= CURRENT_DATE),
+    CONSTRAINT chk_fcbc_wit_dates CHECK (fcbc_wit_start <= COALESCE(fcbc_wit_end, CURRENT_DATE) AND fcbc_wit_end <= CURRENT_DATE),
+    CONSTRAINT chk_preliminary_dates CHECK (preliminary_start <= COALESCE(preliminary_end, CURRENT_DATE) AND preliminary_end <= CURRENT_DATE),
+    CONSTRAINT chk_tech_assessment_dates CHECK (tech_assessment_start <= COALESCE(tech_assessment_end, CURRENT_DATE) AND tech_assessment_end <= CURRENT_DATE),
+    CONSTRAINT chk_legal_review_dates CHECK (legal_review_start <= COALESCE(legal_review_end, CURRENT_DATE) AND legal_review_end <= CURRENT_DATE),
+    CONSTRAINT chk_sdm_dates CHECK (sdm_start <= COALESCE(sdm_end, CURRENT_DATE) AND sdm_end <= CURRENT_DATE),
+    CONSTRAINT chk_distribute_dates CHECK (distribute_complete_start <= COALESCE(distribute_complete_end, CURRENT_DATE) AND distribute_complete_end <= CURRENT_DATE),
+    CONSTRAINT chk_fcbc_sdm_dates CHECK (fcbc_rec_date_start <= COALESCE(sdm_end, CURRENT_DATE))
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.review_stage_dates
+    OWNER to "masterBlaster";
+
+COMMENT ON COLUMN public.review_stage_dates.wt_id
+    IS 'This references the wt_id in watertrack.';
+
+COMMENT ON CONSTRAINT fk_wt_id ON public.review_stage_dates
+    IS 'This is a reference to the watertrack table.';
+
+COMMENT ON CONSTRAINT chk_tech_assessment_dates ON public.review_stage_dates
+    IS 'tech assessment dates are not correct.';
+COMMENT ON CONSTRAINT chk_legal_review_dates ON public.review_stage_dates
+    IS 'legal review dates are not correct. ';
+COMMENT ON CONSTRAINT chk_sdm_dates ON public.review_stage_dates
+    IS 'decision made dates are not correct.';
+COMMENT ON CONSTRAINT chk_distribute_dates ON public.review_stage_dates
+    IS 'distribute and complete dates are not correct.';
+COMMENT ON CONSTRAINT chk_fcbc_sdm_dates ON public.review_stage_dates
+    IS 'The fcbc recieved date or sdm dates are not correct.';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
