@@ -42,6 +42,7 @@ jobs:
       shell: bash
       run: 
         DATESTAMP=$(date +%Y%m%d-%H%M)
+        echo datestamp is $DATESTAMP
         echo ::set-output name=DATESTAMP::${DATESTAMP}
 
     - name: Log in to GitHub Docker Registry
