@@ -59,5 +59,7 @@ jobs:
         push: true # Will only build if this is not here
         context: client
         tags: |
-          ghcr.io/${{ github.repository }}:latest
-          ghcr.io/${{ github.repository }}:${{ steps.calculateImageTag.outputs.DATESTAMP }}
+          water-client:latest
+          water-client:${{ steps.calculateImageTag.outputs.DATESTAMP }}
+        #ghcr.io/${{ github.repository }}:latest
+        #ghcr.io/${{ github.repository }}:${{ steps.calculateImageTag.outputs.DATESTAMP }}
