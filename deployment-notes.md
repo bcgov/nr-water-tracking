@@ -62,11 +62,11 @@ docker run --publish 8888:8888 water-client
 # Todo:
 * ~~Create chart with database in it~~
 * ~~Create database service~~
-* verify backend can get env vars without the .env file
+* ~~verify backend can get env vars without the .env file~~
 * figure out process to create objects in database
-* Create dockerfile for client
-* Create dockerfile for server
-* Create Github actions to build container
+* ~~Create dockerfile for client~~
+* ~~Create dockerfile for server~~
+* ~~Create Github actions to build container~~
 * Create template and add to helm chart to deploy the client container
 * create services for backend
 * create route for backend
