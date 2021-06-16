@@ -55,7 +55,8 @@ spec:
                   key: database-name
                   name: {{ .Values.postgresdb_params.database_secret_name }}
           image: >-
-            docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451
+            registry.redhat.io/rhel8/postgresql-12@sha256:ae810ec4cf64df30858ae03fee7c1542e0cc84aa09a23fa2d1759623647eec61
+          # docker-registry.default.svc:5000/openshift/postgresql@sha256:d740d4960134a692d4d4a19a04c191b563a9cebc4f3dea04e92ae47d08e03451
           imagePullPolicy: IfNotPresent
           livenessProbe:
             exec:
