@@ -75,7 +75,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true # Will only build if this is not here
-        context: server
+        context: cicd
         file: dbclient.docker
         tags: |
           ghcr.io/${{ github.repository_owner }}/dbutility:latest
