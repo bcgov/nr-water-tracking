@@ -27,25 +27,35 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: database-name
-                  name: {{ .Values.postgresdb_params.database_name }}
-            - name: POSTGRES_PASSWORD
+                  name: {{ .Values.postgresdb_params.database_secret_name }}
+            - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
                   key: database-password
-                  name: {{ .Values.postgresdb_params.database_password }}
+                  name: {{ .Values.postgresdb_params.database_secret_name }}
             - name: POSTGRES_USER_NAME
               valueFrom:
                 secretKeyRef:
                   key: database-user
-                  name: {{ .Values.postgresdb_params.database_user }}
+                  name: {{ .Values.postgresdb_params.database_secret_name }}
             - name: POSTGRES_HOST
               value: "{{ .Values.app_name }}-postgres-svc"
-          
           image: >-
-            registry.redhat.io/rhel8/postgresql-12@sha256:ae810ec4cf64df30858ae03fee7c1542e0cc84aa09a23fa2d1759623647eec61
+            registry.connect.redhat.com/crunchydata/pgo-client
+          # registry.redhat.io/ubi7/ubi
+          #image: >-
+          #  registry.redhat.io/rhel8/postgresql-12@sha256:ae810ec4cf64df30858ae03fee7c1542e0cc84aa09a23fa2d1759623647eec61
           imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - >-
+              echo testing two or more commands &&
+              curl https://raw.githubusercontent.com/bcgov/nr-water-tracking/dockerbuild/server/SQL_Watertrack.txt -o /tmp/dbinit.sql &&
+              psql -h $POSTGRES_HOST -p $POSTGRES_PORT -d $POSTGRES_DB_NAME -U $POSTGRES_USER_NAME -f /tmp/dbinit.sql && 
+              psql -h $POSTGRES_HOST -p $POSTGRES_PORT -d $POSTGRES_DB_NAME -U $POSTGRES_USER_NAME -f /tmp/dbinit.sql
           name: {{ .Values.app_name}}-job
-          command: ['python', 'manage.py', 'migrate']
+
       restartPolicy: Never
   backoffLimit: 5
   {{- end }}
