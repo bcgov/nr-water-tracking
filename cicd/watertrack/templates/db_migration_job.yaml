@@ -41,7 +41,8 @@ spec:
             - name: POSTGRES_HOST
               value: "{{ .Values.app_name }}-postgres-svc"
           image: >-
-            registry.connect.redhat.com/crunchydata/pgo-client
+            ghcr.io/bcgov/dbutility:20210616-2257
+          #registry.connect.redhat.com/crunchydata/pgo-client
           # registry.redhat.io/ubi7/ubi
           #image: >-
           #  registry.redhat.io/rhel8/postgresql-12@sha256:ae810ec4cf64df30858ae03fee7c1542e0cc84aa09a23fa2d1759623647eec61
