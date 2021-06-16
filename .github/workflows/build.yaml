@@ -76,7 +76,6 @@ jobs:
       with:
         push: true # Will only build if this is not here
         context: cicd
-        file: dbclient.docker
         tags: |
           ghcr.io/${{ github.repository_owner }}/dbutility:latest
           ghcr.io/${{ github.repository_owner }}/dbutility:${{ steps.calculateImageTag.outputs.DATESTAMP }}
