@@ -91,6 +91,10 @@ postgresdb_params:
   database_pvc_size: "1Gi"
   database_port: 5432
 
+
+backend_port: 3000
+frontend_port: 8000
+
 # used to help build the network policies
 label_database_role: database-role
 label_api_role: api-role

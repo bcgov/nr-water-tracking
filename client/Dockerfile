@@ -17,6 +17,7 @@ FROM caddy:2.1.1-alpine
 WORKDIR /app
 
 COPY --from=BUILD_IMAGE /app/build .
+RUN apk --update add curl bash
 
 # -----------------
 EXPOSE 8888

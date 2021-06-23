@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app_name }}-backend-svc
+  labels:
+    name: {{ .Values.app_name }}-backend-svc
+    app: {{ .Values.app_name }}
+    role: {{ .Values.label_api_role }}
+    env: {{ .Values.env }}
+spec:
+  type: NodePort
+  ports:
+   - port: 3000
+     targetPort: 3000
+  selector:
+    app: {{ .Values.app_name }}
+    name: {{ .Values.app_name }}-backend
+    role: {{ .Values.label_api_role }}
+    env: {{ .Values.env }}
