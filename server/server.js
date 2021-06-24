@@ -3,7 +3,7 @@ const express = require("express"); //  creates the Express application
 const morgan = require("morgan"); //  using as logger
 const cors = require("cors");
 const db = require("./db"); // refernces the index.js in the db folder
-const port = process.env.PORT || 3001; // declare port from .env file
+const port = process.env.PORT || 3000; // declare port from .env file
 
 /*
 1. HEADER

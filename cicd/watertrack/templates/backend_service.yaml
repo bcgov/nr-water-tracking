@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app_name }}-backend-svc
+  labels:
+    app: {{ .Values.app_name }}-backend
+    role: {{ .Values.label_api_role }}
+    deploymentconfig:  {{ .Values.app_name }}-backend-dc
+    service: {{ .Values.app_name }}-backend-svc
+    env: {{ .Values.env }}
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 3000
+      protocol: TCP
+      port: 3000
+  selector:
+    deploymentconfig: {{ .Values.app_name }}-backend-dc
+    app: {{ .Values.app_name }}-backend
+    #name: {{ .Values.app_name }}
+    role: {{ .Values.label_api_role }}
+    env: {{ .Values.env }}

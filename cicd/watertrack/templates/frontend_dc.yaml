@@ -1,0 +1,74 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  generation: 2
+  labels:
+    name: {{ .Values.app_name }}-client-dc
+    app: {{ .Values.app_name }}-client
+    role: {{ .Values.label_app_role }}
+    env: {{ .Values.env }}
+  name: {{ .Values.app_name }}-client-dc
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: {{ .Values.app_name }}-client
+    deploymentconfig: {{ .Values.app_name }}-client-dc
+    env: {{ .Values.env }}
+
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: {{ .Values.app_name }}-client
+        deploymentconfig: {{ .Values.app_name }}-client-dc
+        #name: {{ .Values.app_name }}-client
+        role: {{ .Values.label_app_role }}
+        env: {{ .Values.env }}
+    spec:
+      containers:
+      - image: >-
+          ghcr.io/bcgov/watrtrck-client:{{ .Values.backend_image_tag }}
+        #  ghcr.io/bcgov/watrtrck-client:20210616-2257
+        imagePullPolicy: IfNotPresent
+        name: watrtrck-client
+        ports:
+        - containerPort: {{ .Values.client_container_port }}
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+
+  # triggers:
+  # - imageChangeParams:
+  #     automatic: true
+  #     containerNames:
+  #     - watrtrck-client
+  #     from:
+  #       kind: ImageStreamTag
+  #       name: watrtrck-client:{{ .Values.backend_image_tag }}
+  #     lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/acc72b-dev/watrtrck-client@sha256:484aca70b9fdb481e0e5cafbb9b77256dd80a4ea624c946c7de691bc76d63f18
+  #   type: ImageChange
+  # - type: ConfigChange
