@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  labels:
+    app: watrtrck-kube-backend
+    app.kubernetes.io/component: watrtrck-kube-backend
+    app.kubernetes.io/instance: watrtrck-kube-backend
+    app.kubernetes.io/part-of: watrtrck-backend-app
+    app.openshift.io/runtime-namespace: acc72b-dev
+
+    manager: kube-controller-manager
+    operation: Update
+  name: watrtrck-kube-backend
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: watrtrck-kube-backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: watrtrck-kube-backend
+        deploymentconfig: watrtrck-kube-backend
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/acc72b-dev/watrtrck-kube-backend@sha256:958e67423bacf4c8e8b6533fdcc5102b5ef6da6b7bf841527870fb39131f94e8
+        imagePullPolicy: IfNotPresent
+        name: watrtrck-kube-backend
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
