@@ -2,7 +2,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   labels:
-    app: {{ .Values.app_name }}-frontend
+    app: {{ .Values.app_name }}-client
     env: {{ .Values.env }}
     role: {{ .Values.label_app_role }}
     name: {{ .Values.app_name }}-rt
@@ -10,10 +10,10 @@ metadata:
 spec:
   to:
     kind: Service
-    name: {{ .Values.app_name }}-frontend-svc
+    name: {{ .Values.app_name }}-client-svc
     weight: 100
   port:
-    targetPort: {{ .Values.frontend_port }}-tcp
+    targetPort: {{ .Values.client_service_port }}
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: None

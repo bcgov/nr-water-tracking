@@ -16,6 +16,8 @@ spec:
   selector:
     app: {{ .Values.app_name }}-client
     deploymentconfig: {{ .Values.app_name }}-client-dc
+    env: {{ .Values.env }}
+
   strategy:
     activeDeadlineSeconds: 21600
     resources: {}
@@ -34,20 +36,18 @@ spec:
       labels:
         app: {{ .Values.app_name }}-client
         deploymentconfig: {{ .Values.app_name }}-client-dc
+        #name: {{ .Values.app_name }}-client
+        role: {{ .Values.label_app_role }}
+        env: {{ .Values.env }}
     spec:
       containers:
       - image: >-
-          ghcr.io/bcgov/watrtrck-client:20210616-2257
+          ghcr.io/bcgov/watrtrck-client:{{ .Values.backend_image_tag }}
+        #  ghcr.io/bcgov/watrtrck-client:20210616-2257
         imagePullPolicy: IfNotPresent
         name: watrtrck-client
         ports:
-        - containerPort: 2019
-          protocol: TCP
-        - containerPort: 443
-          protocol: TCP
-        - containerPort: 80
-          protocol: TCP
-        - containerPort: 8888
+        - containerPort: {{ .Values.client_container_port }}
           protocol: TCP
         resources: {}
         terminationMessagePath: /dev/termination-log
@@ -59,14 +59,16 @@ spec:
       terminationGracePeriodSeconds: 30
   test: false
   triggers:
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - watrtrck-client
-      from:
-        kind: ImageStreamTag
-        name: watrtrck-client:20210616-2257
-        namespace: acc72b-dev
-      lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/acc72b-dev/watrtrck-client@sha256:484aca70b9fdb481e0e5cafbb9b77256dd80a4ea624c946c7de691bc76d63f18
-    type: ImageChange
-  - type: ConfigChange
+    - type: ConfigChange
+
+  # triggers:
+  # - imageChangeParams:
+  #     automatic: true
+  #     containerNames:
+  #     - watrtrck-client
+  #     from:
+  #       kind: ImageStreamTag
+  #       name: watrtrck-client:{{ .Values.backend_image_tag }}
+  #     lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/acc72b-dev/watrtrck-client@sha256:484aca70b9fdb481e0e5cafbb9b77256dd80a4ea624c946c7de691bc76d63f18
+  #   type: ImageChange
+  # - type: ConfigChange

@@ -93,7 +93,10 @@ postgresdb_params:
 
 
 backend_port: 3000
-frontend_port: 8000
+# the port the container is setup to listen on
+client_container_port: 8888
+# the port the service is setup to listen on
+client_service_port: 8888
 
 # used to help build the network policies
 label_database_role: database-role
@@ -105,3 +108,7 @@ label_external_role: api-in-role
 
 # whether to run the database migration script  or not
 runmigration: false
+
+# image tags to deploy
+frontend_image_tag: 20210623-2100
+backend_image_tag: 20210623-2100

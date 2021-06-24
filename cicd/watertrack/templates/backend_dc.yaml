@@ -21,6 +21,7 @@ spec:
   selector:
     app:  {{ .Values.app_name }}-backend
     deploymentconfig:  {{ .Values.app_name }}-backend-dc
+    env: {{ .Values.env }}
   strategy:
     activeDeadlineSeconds: 21600
     resources: {}
@@ -39,7 +40,7 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ .Values.app_name }}-backend
-        name: {{ .Values.app_name}}
+        #name: {{ .Values.app_name}}-backend
         role: {{ .Values.label_api_role}}
         env: {{ .Values.env }}
         deploymentconfig: {{ .Values.app_name }}-backend-dc
@@ -68,7 +69,8 @@ spec:
             - name: PORT
               value: {{ .Values.backend_port | quote }}
           image: >-
-            ghcr.io/bcgov/watrtrck-backend:20210616-2257
+            ghcr.io/bcgov/watrtrck-backend:{{ .Values.backend_image_tag }}
+          # ghcr.io/bcgov/watrtrck-backend:20210616-2257
           imagePullPolicy: IfNotPresent
           livenessProbe: 
             httpGet:
@@ -100,14 +102,14 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
 
-  triggers:
-  - imageChangeParams:
-      automatic: true
-      containerNames:
-      - {{ .Values.app_name }}-backend
-      from:
-        kind: ImageStreamTag
-        name: watrtrck-backend:20210616-2257
-      lastTriggeredImage: ghcr.io/bcgov/watrtrck-backend@sha256:2265924ad8b68f354aaa806420157f690b7f6c6181510eebb1b5cc5b20580ac6
-    type: ImageChange
+  # triggers:
+  # - imageChangeParams:
+  #     automatic: true
+  #     containerNames:
+  #     - watrtrck-backend
+  #     from:
+  #       kind: ImageStreamTag
+  #       name: watrtrck-backend:{{ .Values.backend_image_tag }}
+  #     lastTriggeredImage: ghcr.io/bcgov/watrtrck-backend@sha256:2265924ad8b68f354aaa806420157f690b7f6c6181510eebb1b5cc5b20580ac6
+  #   type: ImageChange
   # # - type: ConfigChange
