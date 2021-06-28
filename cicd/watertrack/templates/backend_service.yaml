@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Values.app_name }}-backend
     role: {{ .Values.label_api_role }}
-    deploymentconfig:  {{ .Values.app_name }}-backend-dc
+    deployment: {{ .Values.app_name }}-backend-deploy
     service: {{ .Values.app_name }}-backend-svc
     env: {{ .Values.env }}
 spec:
@@ -15,7 +15,7 @@ spec:
       protocol: TCP
       port: 3000
   selector:
-    deploymentconfig: {{ .Values.app_name }}-backend-dc
+    deployment: {{ .Values.app_name }}-backend-deploy
     app: {{ .Values.app_name }}-backend
     #name: {{ .Values.app_name }}
     role: {{ .Values.label_api_role }}
