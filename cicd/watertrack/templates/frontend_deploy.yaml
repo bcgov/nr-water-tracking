@@ -1,33 +1,35 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   annotations:
-    openshift.io/generated-by: OpenShiftWebConsole
-  generation: 2
+    deployment.kubernetes.io/revision: "1"
+  generation: 1
   labels:
-    name: {{ .Values.app_name }}-client-dc
+    name: {{ .Values.app_name }}-client-deploy
     app: {{ .Values.app_name }}-client
     role: {{ .Values.label_app_role }}
     env: {{ .Values.env }}
-  name: {{ .Values.app_name }}-client-dc
+
+
+    app.kubernetes.io/component: {{ .Values.app_name }}-client
+    app.kubernetes.io/instance: {{ .Values.app_name }}-client
+    app.kubernetes.io/part-of: {{ .Values.app_name }}
+    app.kubernetes.io/managed-by: Helm
+  name: {{ .Values.app_name }}-client-deploy
 spec:
+  progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
-    app: {{ .Values.app_name }}-client
-    deploymentconfig: {{ .Values.app_name }}-client-dc
-    env: {{ .Values.env }}
-
+    matchLabels:
+      app: {{ .Values.app_name }}-client
+      deployment: {{ .Values.app_name }}-client-deploy
+      env: {{ .Values.env }}
   strategy:
-    activeDeadlineSeconds: 21600
-    resources: {}
-    rollingParams:
-      intervalSeconds: 1
+    rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
-      timeoutSeconds: 600
-      updatePeriodSeconds: 1
-    type: Rolling
+    type: RollingUpdate
   template:
     metadata:
       annotations:
@@ -35,7 +37,7 @@ spec:
       creationTimestamp: null
       labels:
         app: {{ .Values.app_name }}-client
-        deploymentconfig: {{ .Values.app_name }}-client-dc
+        deployment: {{ .Values.app_name }}-client-deploy
         #name: {{ .Values.app_name }}-client
         role: {{ .Values.label_app_role }}
         env: {{ .Values.env }}
@@ -43,7 +45,7 @@ spec:
       containers:
       - image: >-
           ghcr.io/bcgov/watrtrck-client:{{ .Values.backend_image_tag }}
-        #  ghcr.io/bcgov/watrtrck-client:20210616-2257
+        #image-registry.openshift-image-registry.svc:5000/acc72b-dev/watrtrck-kube-client@sha256:2fe4236957c2455e0997536b627a01833202261aa41ae9774a5d78d6dbea584b
         imagePullPolicy: IfNotPresent
         name: watrtrck-client
         ports:
@@ -57,18 +59,4 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
-  test: false
-  triggers:
-    - type: ConfigChange
 
-  # triggers:
-  # - imageChangeParams:
-  #     automatic: true
-  #     containerNames:
-  #     - watrtrck-client
-  #     from:
-  #       kind: ImageStreamTag
-  #       name: watrtrck-client:{{ .Values.backend_image_tag }}
-  #     lastTriggeredImage: image-registry.openshift-image-registry.svc:5000/acc72b-dev/watrtrck-client@sha256:484aca70b9fdb481e0e5cafbb9b77256dd80a4ea624c946c7de691bc76d63f18
-  #   type: ImageChange
-  # - type: ConfigChange

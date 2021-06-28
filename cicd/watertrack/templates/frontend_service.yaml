@@ -8,7 +8,7 @@ metadata:
     role: {{ .Values.label_app_role }}
     service: {{ .Values.app_name }}-client-svc
     env: {{ .Values.env }}
-    deploymentconfig:  {{ .Values.app_name }}-client-dc
+    deployment:  {{ .Values.app_name }}-client-deploy
 spec:
   type: ClusterIP
   ports:
@@ -20,4 +20,4 @@ spec:
     #name: {{ .Values.app_name }}-client
     role: {{ .Values.label_app_role }}
     env: {{ .Values.env }}
-    deploymentconfig: {{ .Values.app_name }}-client-dc
+    deployment:  {{ .Values.app_name }}-client-deploy
